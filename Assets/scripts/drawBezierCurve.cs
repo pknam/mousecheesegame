@@ -52,10 +52,25 @@ public class drawBezierCurve : MonoBehaviour
         allPoints = getControlPoints().ToArray();
         SplineBuilder crs = new SplineBuilder(allPoints);
 
+        bool available = true;
+        GameObject[] walls = GameObject.FindGameObjectsWithTag("wall");
+
         for (int p = 0; p < lineRes; p++)
         {
             Vector3 temp = crs.Interp((float)p / lineRes);
             line.SetPosition(p, temp);
+
+            temp.z = 1f;
+            foreach(var wall in walls)
+            {
+                if (wall.GetComponent<BoxCollider2D>().bounds.Contains(temp))
+                    available = false;
+            }
+
+            if (available)
+                line.SetColors(Color.green, Color.green);
+            else
+                line.SetColors(Color.red, Color.red);
         }
     }
 }
