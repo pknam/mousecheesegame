@@ -8,8 +8,12 @@ public class bezierPointBehaviour : MonoBehaviour
         transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
 
         if (GameObject.FindGameObjectWithTag("board").GetComponent<BoxCollider2D>().bounds.Contains(new Vector3(transform.position.x, transform.position.y, 1)))
-            Debug.Log("in board");
+        {
+            transform.parent = GameObject.Find("bezier_control").transform;
+        }
         else
-            Debug.Log("out board");
+        {
+            transform.parent = null;
+        }
     }
 }
