@@ -31,7 +31,6 @@ public class drawBezierCurve : MonoBehaviour
         templist.Add(transform.FindChild("mouse").transform.position);
         templist.Add(transform.FindChild("mouse").transform.position);
 
-        templist.Add(transform.GetChild(0).position);
 
         foreach (Transform child in transform)
             if(child.name == "pivot")
