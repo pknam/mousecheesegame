@@ -4,14 +4,13 @@ using System.Collections.Generic;
 
 public class drawBezierCurve : MonoBehaviour 
 {
+    [HideInInspector]
     public LineRenderer line = new LineRenderer();
-    public int a;
-    public float curVarValue;
-    public int lineRes;
+    
+    private int lineRes;
 
     void Start()
     {
-        a = 0;
         lineRes = 200;
         line = gameObject.AddComponent<LineRenderer>();
         line.material = new Material(Shader.Find("Particles/Additive"));
@@ -33,7 +32,7 @@ public class drawBezierCurve : MonoBehaviour
 
 
         foreach (Transform child in transform)
-            if(child.name == "pivot")
+            if(child.tag == "pivot")
                 templist.Add(new Vector3(child.transform.position.x, child.transform.position.y, child.transform.position.z));
 
         // end point
@@ -59,7 +58,7 @@ public class drawBezierCurve : MonoBehaviour
             Vector3 temp = crs.Interp((float)p / lineRes);
             line.SetPosition(p, temp);
 
-            temp.z = 1f;
+            temp.z = -0.01f;
             foreach(var wall in walls)
             {
                 if (wall.GetComponent<BoxCollider2D>().bounds.Contains(temp))

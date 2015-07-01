@@ -8,6 +8,8 @@ TagManager:
   - cheese
   - board
   - wall
+  - bezier_control
+  - pivot
   layers:
   - Default
   - TransparentFX
@@ -17,8 +19,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - game_layer
+  - rendering_layer
   - 
   - 
   - 
