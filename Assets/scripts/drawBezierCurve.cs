@@ -85,6 +85,7 @@ public class SplineBuilder
         System.Array.Copy(pts, this.pts, pts.Length);
     }
 
+    // t range : [0.0f, 1.0f)
     public Vector3 Interp(float t)
     {
         int numSections = pts.Length - 3;
@@ -96,6 +97,8 @@ public class SplineBuilder
         Vector3 c = pts[curPoint + 2];
         Vector3 d = pts[curPoint + 3];
 
+        // u값이 0.0f부터 1.0f까지 바뀜
+        // 곡선 b에서 c까지를 1로 볼 때, u만큼 지나간 위치를 반환
         return .5f * ((-a + 3f * b - 3f * c + d) * (u * u * u) + (2f * a - 5f * b + 4f * c - d) * (u * u) + (-a + c) * u + 2f * b);
     }
 }
