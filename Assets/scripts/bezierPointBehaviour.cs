@@ -3,12 +3,20 @@ using System.Collections;
 
 public class bezierPointBehaviour : MonoBehaviour
 {
+
     void OnMouseDrag()
     {
-        Vector3 tmp = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-        tmp.z = transform.position.z;
+        Plane boardPlane = new Plane(Vector3.forward, Vector3.zero);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        float distance;
+        Vector3 tmp = transform.position;
 
-        transform.position = tmp;
+        if (boardPlane.Raycast(ray, out distance))
+        {
+            tmp = ray.GetPoint(distance);
+            tmp.z = transform.position.z;
+            transform.position = tmp;
+        }
     }
 
     void Update()

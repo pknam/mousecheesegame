@@ -122,7 +122,7 @@ Camera:
   near clip plane: .00999999978
   far clip plane: 50
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 11.2195587
   m_Depth: -1
   m_CullingMask:
@@ -143,7 +143,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 194363108}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.70000005, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -22.2600002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -438,7 +438,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 449390, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -1
+      value: -.00999999978
       objectReference: {fileID: 0}
     - target: {fileID: 449390, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_LocalRotation.x
@@ -458,7 +458,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 449390, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 172770, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_Name
@@ -526,11 +526,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 449390, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -2.9000001
+      value: -3.50999999
       objectReference: {fileID: 0}
     - target: {fileID: 449390, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -8.94999981
+      value: -8.75
       objectReference: {fileID: 0}
     - target: {fileID: 449390, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_LocalPosition.z
@@ -554,7 +554,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 449390, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 172770, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_Name
