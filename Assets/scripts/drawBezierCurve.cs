@@ -30,16 +30,13 @@ public class drawBezierCurve : MonoBehaviour
         templist.Add(transform.FindChild("mouse").transform.position);
         templist.Add(transform.FindChild("mouse").transform.position);
 
-
         foreach (Transform child in transform)
             if(child.tag == "pivot")
-                templist.Add(new Vector3(child.transform.position.x, child.transform.position.y, child.transform.position.z));
+                templist.Add(child.transform.position);
 
         // end point
         templist.Add(transform.FindChild("cheese").transform.position);
         templist.Add(transform.FindChild("cheese").transform.position);
-
-
 
         return templist;
     }
@@ -72,7 +69,6 @@ public class drawBezierCurve : MonoBehaviour
         }
     }
 }
-
 
 public class SplineBuilder
 {

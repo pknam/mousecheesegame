@@ -3,7 +3,6 @@ using System.Collections;
 
 public class bezierPointBehaviour : MonoBehaviour
 {
-
     void OnMouseDrag()
     {
         Plane boardPlane = new Plane(Vector3.forward, Vector3.zero);
@@ -22,7 +21,8 @@ public class bezierPointBehaviour : MonoBehaviour
     void Update()
     {
         Bounds b = GameObject.FindGameObjectWithTag("board").GetComponent<SpriteRenderer>().bounds;
-
+        
+        // pivot이 게임판 안에 있으면 bezier_control을 parent로 설정
         if (b.Contains(new Vector3(transform.position.x, transform.position.y, 0)))
         {
             transform.parent = GameObject.FindGameObjectWithTag("bezier_control").transform;
