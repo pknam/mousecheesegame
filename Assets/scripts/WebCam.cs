@@ -26,12 +26,12 @@ public class WebCam : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        h_upper = 0.995f;
-        h_lower = 0.938f;
-        s_upper = 0.88f;
-        s_lower = 0.673f;
-        v_upper = 0.706f;
-        v_lower = 0.544f;
+        h_upper = 0.06f;
+        h_lower = 0.012f;
+        s_upper = 0.783f;
+        s_lower = 0.595f;
+        v_upper = 1f;
+        v_lower = 0.849f;
 
         m_blobLabeling = new BlobLabeling();
 

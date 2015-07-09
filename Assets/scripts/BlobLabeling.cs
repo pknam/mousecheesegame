@@ -180,7 +180,7 @@ class BlobLabeling : Object
 
                     __NRFindNeighbor(nWidth, nHeight, nX, nY, ref startX, ref startY, ref endX, ref endY);
 
-                    if (__Area(startX, startY, endX, endY, nWidth, num) != 0)
+                    if (__Area(startX, startY, endX, endY, nWidth, num) < nThreshold)
                     {
                         for (int k = startY; k <= endY; k++)
                         {
