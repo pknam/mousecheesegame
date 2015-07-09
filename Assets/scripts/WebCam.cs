@@ -6,7 +6,7 @@ using System.Threading;
 public class WebCam : MonoBehaviour
 {
     private WebCamTexture webcamTexture;
-    Texture2D viewTexture;
+    private Texture2D viewTexture;
 
     BlobLabeling m_blobLabeling;
 
@@ -139,59 +139,4 @@ public class WebCam : MonoBehaviour
             H = 0.0f;
         }
     }
-
 }
-
-//class HSV
-//{
-//    public float h;
-//    public float s;
-//    public float v;
-
-//    public HSV()
-//    {
-//        this.h = 0;
-//        this.s = 0;
-//        this.v = 0;
-//    }
-
-//    public HSV(float h, float s, float v)
-//    {
-//        this.h = h;
-//        this.s = s;
-//        this.v = v;
-//    }
-
-//    public HSV(Color color)
-//    {
-//        fromColor(color);
-//    }
-
-//    public void fromColor(Color color)
-//    {
-//        float min, max, delta;
-
-//        min = Mathf.Min(color.r, color.g, color.b);
-//        max = Mathf.Max(color.r, color.g, color.b);
-//        this.v = max;				// v
-//        delta = max - min;
-//        if (max != 0)
-//            this.s = delta / max;		// s
-//        else
-//        {
-//            // r = g = b = 0		// s = 0, v is undefined
-//            this.s = 0;
-//            this.h = -1;
-//            return;
-//        }
-//        if (color.r == max)
-//            this.h = (color.g - color.b) / delta;		// between yellow & magenta
-//        else if (color.g == max)
-//            this.h = 2 + (color.b - color.r) / delta;	// between cyan & yellow
-//        else
-//            this.h = 4 + (color.r - color.g) / delta;	// between magenta & cyan
-//        this.h *= 60;				// degrees
-//        if (this.h < 0)
-//            this.h += 360;
-//    }
-//}

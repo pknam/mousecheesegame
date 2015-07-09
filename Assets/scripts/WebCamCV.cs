@@ -3,8 +3,11 @@ using System.Collections;
 using OpenCvSharp;
 using System.Runtime.InteropServices;
 
-public class CVTest : MonoBehaviour
+public class WebCamCV : MonoBehaviour
 {
+    public GameObject ball;
+    public GameObject board;
+
     public BitDepth ImagesDepth = BitDepth.U8;
     private WebCamTexture webcamTexture;
     private Texture2D viewTexture;
@@ -59,11 +62,8 @@ public class CVTest : MonoBehaviour
         {
             for (int j = 0; j < img.Width; j++)
             {
-                float b = (float)img[i, j].Val0;
-                float g = (float)img[i, j].Val0;
-                float r = (float)img[i, j].Val0;
-                Color color = new Color(r / 255.0f, g / 255.0f, b / 255.0f);
-                pixels[i * img.Width + j] = color;
+                float val = (float) img[i, j].Val0 / 255;
+                pixels[i * img.Width + j] = new Color(val, val, val);
             }
         }
         viewTexture.SetPixels(pixels);
@@ -77,15 +77,15 @@ public class CVTest : MonoBehaviour
 
         for (int i = 0; i < webcamTexture.height; i++)
         {
-            for(int j = 0; j < webcamTexture.width; j++)
+            for (int j = webcamTexture.width - 1; j >= 0; j--)
             {
                 Color pixel = pixels[i * webcamTexture.width + j];
                 CvScalar col = new CvScalar
                 {
-                    Val0 = (double) pixel.r * 255,
-					Val1 = (double) pixel.g * 255,
-					Val2 = (double) pixel.b * 255
-				};
+                    Val0 = (double)pixel.r * 255,
+                    Val1 = (double)pixel.g * 255,
+                    Val2 = (double)pixel.b * 255
+                };
 
                 img.Set2D(i, j, col);
             }
@@ -126,11 +126,11 @@ public class CVTest : MonoBehaviour
 
     void Update()
     {
-        IplImage img = WebcamTextureToIplImage();
-        img = GetThresholdedImage(img);
-        ThresholdedIplImageToViewTexture(img);
+        IplImage img = WebcamTextureToIplImage();   // ;;
+        img = GetThresholdedImage(img);             // ok
+        ThresholdedIplImageToViewTexture(img);      // ;;
 
-        m_blobLabeling.setParam(viewTexture.GetPixels(), webcamTexture.width, webcamTexture.height, 120);
+        m_blobLabeling.setParam(viewTexture.GetPixels(), webcamTexture.width, webcamTexture.height, 50);
         m_blobLabeling.DoLabeling();
 
         Debug.Log(m_blobLabeling.m_nBlobs);
@@ -153,6 +153,20 @@ public class CVTest : MonoBehaviour
                     pt2.y * viewBounds.size.y / webcamTexture.height + viewPos.y - viewBounds.size.y / 2,
                     -20),
                 Color.green);
+        }
+
+        if(m_blobLabeling.m_nBlobs > 0)
+        {
+            Vector3 ballPos = ball.transform.position;
+            Vector3 boardPos = board.transform.position;
+            Bounds boardBounds = board.GetComponent<Renderer>().bounds;
+            Vector3 _smoothVel = Vector3.zero;
+
+            ballPos.x = m_blobLabeling.m_recBlobs[0].center.x * (boardBounds.size.x * 1.5f) / webcamTexture.width + boardPos.x - (boardBounds.size.x * 1.5f) / 2f;
+            ballPos.y = m_blobLabeling.m_recBlobs[0].center.y * (boardBounds.size.y * 1.5f) / webcamTexture.height + boardPos.y - (boardBounds.size.y * 1.5f) / 2f;
+
+            ball.transform.position = ballPos;
+            ball.transform.position = Vector3.SmoothDamp(ball.transform.position, new Vector3(ballPos.x, ballPos.y), ref _smoothVel, 0.3f);
         }
 
     }
