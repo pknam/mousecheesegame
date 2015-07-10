@@ -59,6 +59,7 @@ class BlobLabeling : System.Object
         m_nWidth = image.Width;
         m_nHeight = image.Height;
         m_nThreshold = nThreshold;
+        m_cdataBuf = new byte[m_nWidth * m_nHeight];
     }
 
     public void DoLabeling()
@@ -70,7 +71,6 @@ class BlobLabeling : System.Object
     {
         int nNumber;
 
-        m_cdataBuf = new byte[m_nWidth * m_nHeight];
 
         // data copy
         IntPtr ptr = image.ImageData;

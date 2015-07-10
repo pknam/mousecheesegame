@@ -8,12 +8,13 @@ public class WebCamCV : MonoBehaviour
 {
     public bool viewCam;
     public bool viewThresholded;
+    public bool erode;
+    public bool dilate;
 
     public GameObject ball;
     public GameObject board;
 
     private  BitDepth ImagesDepth = BitDepth.U8;
-    private WebCamTexture webcamTexture;
     private Texture2D viewTexture;
     private Texture2D cvCamTexture;
 
@@ -50,12 +51,6 @@ public class WebCamCV : MonoBehaviour
         m_nWidth = cap.FrameWidth;
         m_nHeight = cap.FrameHeight;
 
-        //webcamTexture = new WebCamTexture();
-        //webcamTexture.Play();
-        //this.GetComponent<Renderer>().material.mainTexture = webcamTexture;
-        //m_nWidth = webcamTexture.width;
-        //m_nHeight = webcamTexture.height;
-
         viewCam = false;
         viewThresholded = false;
 
@@ -66,12 +61,11 @@ public class WebCamCV : MonoBehaviour
         v_upper = 256;
         v_lower = 244;
 
-
         viewTexture = new Texture2D(m_nWidth, m_nHeight, TextureFormat.RGB24, false);
         GameObject.Find("viewcv").GetComponent<Renderer>().material.mainTexture = viewTexture;
 
         cvCamTexture = new Texture2D(m_nWidth, m_nHeight, TextureFormat.RGB24, false);
-        GameObject.Find("cv_webcam").GetComponent<Renderer>().material.mainTexture = cvCamTexture;
+        this.GetComponent<Renderer>().material.mainTexture = cvCamTexture;
 
         thread_max = 30;
         thread = new Thread[thread_max];
@@ -83,22 +77,6 @@ public class WebCamCV : MonoBehaviour
         Marshal.Copy(img.ImageData, data, 0, img.Width * img.Height * 3);
         this.cvCamTexture.LoadRawTextureData(data);
         this.cvCamTexture.Apply();
-    }
-
-    private void ThresholdedIplImageToViewTexture(IplImage img)
-    {
-        Color[] pixels = new Color[img.Width * img.Height];
-
-        for (int i = 0; i < img.Height; i++)
-        {
-            for (int j = 0; j < img.Width; j++)
-            {
-                float val = (float) img[i, j].Val0 / 255;
-                pixels[i * img.Width + j] = new Color(val, val, val);
-            }
-        }
-        viewTexture.SetPixels(pixels);
-        viewTexture.Apply();
     }
 
     private Color[] ThresholdedIplImageToColorMat(IplImage img)
@@ -116,31 +94,6 @@ public class WebCamCV : MonoBehaviour
 
         return pixels;
     }
-
-    private IplImage WebcamTextureToIplImage()
-    {
-        IplImage img = new IplImage(m_nWidth, m_nHeight, BitDepth.U8, 3);
-        Color[] pixels = webcamTexture.GetPixels();
-
-        for (int i = 0; i < m_nHeight; i++)
-        {
-            for (int j = 0; j < m_nWidth; j++)
-            {
-                Color pixel = pixels[i * m_nWidth + j];
-                CvScalar col = new CvScalar
-                {
-                    Val0 = (double)pixel.r * 255,
-                    Val1 = (double)pixel.g * 255,
-                    Val2 = (double)pixel.b * 255
-                };
-
-                img.Set2D(i, j, col);
-            }
-        }
-
-        return img;
-    }
-
 
     private IplImage GetThresholdedImage(IplImage img)
     {
@@ -165,8 +118,11 @@ public class WebCamCV : MonoBehaviour
         Cv.InRangeS(imgHsv, from, to, imgThreshed);
         Cv.ReleaseImage(imgHsv);
 
-        Cv.Erode(imgThreshed, imgThreshed, null, 1);
-        Cv.Dilate(imgThreshed, imgThreshed, null, 9);
+        if(erode)
+            Cv.Erode(imgThreshed, imgThreshed, null, 1);
+
+        if(dilate)
+            Cv.Dilate(imgThreshed, imgThreshed, null, 9);
 
         return imgThreshed;
     }
@@ -211,7 +167,7 @@ public class WebCamCV : MonoBehaviour
             ballPos.x = blobLabeling.m_recBlobs[0].center.x * (boardBounds.size.x * 1.5f) / m_nWidth + boardPos.x - (boardBounds.size.x * 1.5f) / 2f;
             ballPos.y = blobLabeling.m_recBlobs[0].center.y * (boardBounds.size.y * 1.5f) / m_nHeight + boardPos.y - (boardBounds.size.y * 1.5f) / 2f;
 
-            ball.transform.position = Vector3.SmoothDamp(ball.transform.position, new Vector3(ballPos.x, ballPos.y), ref _smoothVel, 0.3f);
+            ball.transform.position = Vector3.SmoothDamp(ball.transform.position, new Vector3(ballPos.x, ballPos.y), ref _smoothVel, 0.1f);
         }
     }
 }
