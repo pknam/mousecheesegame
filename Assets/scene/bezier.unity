@@ -233,6 +233,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66761b6083a9a5548bd4fd19a4562415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  viewCam: 0
+  viewThresholded: 0
   ball: {fileID: 943295515}
   board: {fileID: 1755951853}
   thread_max: 0
@@ -296,7 +298,7 @@ Transform:
   m_LocalScale: {x: 13, y: 9, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
 --- !u!1 &403767417
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,7 +403,6 @@ GameObject:
   - 33: {fileID: 812208290}
   - 65: {fileID: 812208289}
   - 23: {fileID: 812208288}
-  - 114: {fileID: 812208287}
   m_Layer: 8
   m_Name: cv_webcam
   m_TagString: Untagged
@@ -409,26 +410,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &812208287
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 812208286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66761b6083a9a5548bd4fd19a4562415, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ball: {fileID: 943295515}
-  board: {fileID: 1755951853}
-  thread_max: 0
-  h_upper: 0
-  h_lower: 0
-  s_upper: 0
-  s_lower: 0
-  v_upper: 0
-  v_lower: 0
 --- !u!23 &812208288
 MeshRenderer:
   m_ObjectHideFlags: 0

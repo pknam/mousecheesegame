@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using OpenCvSharp;
+using System.Runtime.InteropServices;
+using System;
 
 class Point
 {
@@ -19,14 +22,14 @@ class Visited
     public Point point;
 }
 
-class BlobLabeling : Object
+class BlobLabeling : System.Object
 {
-    public Color[] m_image;
+    public IplImage m_image;
     public int m_nWidth;
     public int m_nHeight;
 
     // labeling을위한 buffer
-    public int[] m_cdataBuf;
+    public byte[] m_cdataBuf;
 
     public int m_nThreshold;
     public Visited[] m_vPoint;
@@ -44,7 +47,7 @@ class BlobLabeling : Object
         m_recBlobs = null;
     }
 
-    public void setParam(Color[] image, int nWidth, int nHeight, int nThreshold)
+    public void setParam(IplImage image, int nThreshold)
     {
         if (m_recBlobs != null)
         {
@@ -52,9 +55,9 @@ class BlobLabeling : Object
             m_nBlobs = MAX_BLOBS;
         }
 
-        m_image = image.Clone() as Color[];
-        m_nWidth = nWidth;
-        m_nHeight = nHeight;
+        m_image = image;
+        m_nWidth = image.Width;
+        m_nHeight = image.Height;
         m_nThreshold = nThreshold;
     }
 
@@ -63,16 +66,18 @@ class BlobLabeling : Object
         m_nBlobs = Labeling(m_image, m_nThreshold);
     }
 
-    private int Labeling(Color[] image, int nThreshold)
+    private int Labeling(IplImage image, int nThreshold)
     {
         int nNumber;
 
-        m_cdataBuf = new int[m_nWidth * m_nHeight];
+        m_cdataBuf = new byte[m_nWidth * m_nHeight];
 
+        // data copy
+        IntPtr ptr = image.ImageData;
         for (int j = 0; j < m_nHeight; j++)
             for (int i = 0; i < m_nWidth; i++)
-                if (image[j * m_nWidth + i].Equals(new Color(1, 1, 1)))
-                    m_cdataBuf[j * m_nWidth + i] = 255;
+                m_cdataBuf[j * m_nWidth + i] = Marshal.ReadByte(ptr, m_nWidth * j + i);
+
 
         initvPoint(m_nWidth, m_nHeight);
 
@@ -160,7 +165,7 @@ class BlobLabeling : Object
 
     private int _Labeling(int nWidth, int nHeight, int nThreshold)
     {
-        int num = 0;
+        byte num = 0;
         int nX, nY;
         int startX, startY, endX, endY;
 

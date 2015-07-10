@@ -75,30 +75,30 @@ public class WebCam : MonoBehaviour
         viewTexture.SetPixels(view_pixels);
         viewTexture.Apply();
 
-        m_blobLabeling.setParam(view_pixels, webcamTexture.width, webcamTexture.height, 50);
-        m_blobLabeling.DoLabeling();
+        //m_blobLabeling.setParam(view_pixels, webcamTexture.width, webcamTexture.height, 50);
+        //m_blobLabeling.DoLabeling();
 
-        Debug.Log(m_blobLabeling.m_nBlobs);
+        //Debug.Log(m_blobLabeling.m_nBlobs);
 
-        Vector3 viewPos = this.transform.position;
-        Bounds viewBounds = this.GetComponent<Renderer>().bounds;
+        //Vector3 viewPos = this.transform.position;
+        //Bounds viewBounds = this.GetComponent<Renderer>().bounds;
 
-        for(int i=0; i<m_blobLabeling.m_nBlobs; i++)
-        {
-            Point pt1 = new Point((int)m_blobLabeling.m_recBlobs[i].x, (int)m_blobLabeling.m_recBlobs[i].y);
-            Point pt2 = new Point(pt1.x + (int)m_blobLabeling.m_recBlobs[i].width, pt1.y + (int)m_blobLabeling.m_recBlobs[i].height);
+        //for(int i=0; i<m_blobLabeling.m_nBlobs; i++)
+        //{
+        //    Point pt1 = new Point((int)m_blobLabeling.m_recBlobs[i].x, (int)m_blobLabeling.m_recBlobs[i].y);
+        //    Point pt2 = new Point(pt1.x + (int)m_blobLabeling.m_recBlobs[i].width, pt1.y + (int)m_blobLabeling.m_recBlobs[i].height);
 
-            Debug.DrawLine(
-                new Vector3(
-                    pt1.x * viewBounds.size.x / webcamTexture.width + viewPos.x - viewBounds.size.x / 2,
-                    pt1.y * viewBounds.size.y / webcamTexture.height + viewPos.y - viewBounds.size.y / 2,
-                    -20),
-                new Vector3(
-                    pt2.x * viewBounds.size.x / webcamTexture.width + viewPos.x - viewBounds.size.x / 2,
-                    pt2.y * viewBounds.size.y / webcamTexture.height + viewPos.y - viewBounds.size.y / 2,
-                    -20),
-                Color.green);
-        }
+        //    Debug.DrawLine(
+        //        new Vector3(
+        //            pt1.x * viewBounds.size.x / webcamTexture.width + viewPos.x - viewBounds.size.x / 2,
+        //            pt1.y * viewBounds.size.y / webcamTexture.height + viewPos.y - viewBounds.size.y / 2,
+        //            -20),
+        //        new Vector3(
+        //            pt2.x * viewBounds.size.x / webcamTexture.width + viewPos.x - viewBounds.size.x / 2,
+        //            pt2.y * viewBounds.size.y / webcamTexture.height + viewPos.y - viewBounds.size.y / 2,
+        //            -20),
+        //        Color.green);
+        //}
     }
 
     public static void RGBToHSV(Color rgbColor, out float H, out float S, out float V)

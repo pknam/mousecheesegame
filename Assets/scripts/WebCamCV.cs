@@ -181,29 +181,22 @@ public class WebCamCV : MonoBehaviour
     {
         Cv.GrabFrame(cap);
         IplImage img = Cv.RetrieveFrame(cap);
+        IplImage thresholdedImg = GetThresholdedImage(img);
 
         if (viewCam)
         {
             IplImageToViewTexture(img);
         }
 
-
-
-        img = GetThresholdedImage(img);
-
-        System.Diagnostics.Stopwatch w = System.Diagnostics.Stopwatch.StartNew();
-        Color[] pixels = ThresholdedIplImageToColorMat(img);
-        w.Stop();
         if (viewThresholded)
         {
+            Color[] pixels = ThresholdedIplImageToColorMat(thresholdedImg);
             viewTexture.SetPixels(pixels);
             viewTexture.Apply();
         }
 
-
-
         // Labeling
-        blobLabeling.setParam(pixels, m_nWidth, m_nHeight, 50);
+        blobLabeling.setParam(thresholdedImg, 50);
         blobLabeling.DoLabeling();
 
         Vector3 viewPos = this.transform.position;
@@ -220,8 +213,5 @@ public class WebCamCV : MonoBehaviour
 
             ball.transform.position = Vector3.SmoothDamp(ball.transform.position, new Vector3(ballPos.x, ballPos.y), ref _smoothVel, 0.3f);
         }
-
-
-        Debug.Log(w.ElapsedMilliseconds + " ms");
     }
 }
