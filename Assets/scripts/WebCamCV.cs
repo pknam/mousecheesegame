@@ -2,17 +2,31 @@
 using System.Collections;
 using OpenCvSharp;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 public class WebCamCV : MonoBehaviour
 {
+    public bool viewCam;
+    public bool viewThresholded;
+
     public GameObject ball;
     public GameObject board;
 
-    public BitDepth ImagesDepth = BitDepth.U8;
+    private  BitDepth ImagesDepth = BitDepth.U8;
     private WebCamTexture webcamTexture;
     private Texture2D viewTexture;
+    private Texture2D cvCamTexture;
 
-    BlobLabeling m_blobLabeling;
+    BlobLabeling blobLabeling;
+
+    private int m_nWidth;
+    private int m_nHeight;
+
+    public int thread_max;
+    private Thread[] thread;
+
+    CvCapture cap;
+
 
     [Range(0, 180)]
     public int h_upper;
@@ -29,29 +43,46 @@ public class WebCamCV : MonoBehaviour
 
     void Start()
     {
-        h_upper = 129;
-        h_lower = 108;
-        s_upper = 207;
-        s_lower = 131;
+        blobLabeling = new BlobLabeling();
+
+
+        cap = new CvCapture(0);
+        m_nWidth = cap.FrameWidth;
+        m_nHeight = cap.FrameHeight;
+
+        //webcamTexture = new WebCamTexture();
+        //webcamTexture.Play();
+        //this.GetComponent<Renderer>().material.mainTexture = webcamTexture;
+        //m_nWidth = webcamTexture.width;
+        //m_nHeight = webcamTexture.height;
+
+        viewCam = false;
+        viewThresholded = false;
+
+        h_upper = 180;
+        h_lower = 169;
+        s_upper = 11;
+        s_lower = 0;
         v_upper = 256;
-        v_lower = 212;
+        v_lower = 244;
 
-        m_blobLabeling = new BlobLabeling();
 
-        webcamTexture = new WebCamTexture();
-        webcamTexture.Play();
-        this.GetComponent<Renderer>().material.mainTexture = webcamTexture;
-
-        viewTexture = new Texture2D(webcamTexture.width, webcamTexture.height, TextureFormat.RGB24, false);
+        viewTexture = new Texture2D(m_nWidth, m_nHeight, TextureFormat.RGB24, false);
         GameObject.Find("viewcv").GetComponent<Renderer>().material.mainTexture = viewTexture;
+
+        cvCamTexture = new Texture2D(m_nWidth, m_nHeight, TextureFormat.RGB24, false);
+        GameObject.Find("cv_webcam").GetComponent<Renderer>().material.mainTexture = cvCamTexture;
+
+        thread_max = 30;
+        thread = new Thread[thread_max];
     }
 
     private void IplImageToViewTexture(IplImage img)
     {
         byte[] data = new byte[img.Width * img.Height * 3];
         Marshal.Copy(img.ImageData, data, 0, img.Width * img.Height * 3);
-        this.viewTexture.LoadRawTextureData(data);
-        this.viewTexture.Apply();
+        this.cvCamTexture.LoadRawTextureData(data);
+        this.cvCamTexture.Apply();
     }
 
     private void ThresholdedIplImageToViewTexture(IplImage img)
@@ -70,16 +101,32 @@ public class WebCamCV : MonoBehaviour
         viewTexture.Apply();
     }
 
+    private Color[] ThresholdedIplImageToColorMat(IplImage img)
+    {
+        Color[] pixels = new Color[img.Width * img.Height];
+
+        for (int i = 0; i < img.Height; i++)
+        {
+            for (int j = 0; j < img.Width; j++)
+            {
+                float val = (float)img[i, j].Val0 / 255;
+                pixels[i * img.Width + j] = new Color(val, val, val);
+            }
+        }
+
+        return pixels;
+    }
+
     private IplImage WebcamTextureToIplImage()
     {
-        IplImage img = new IplImage(webcamTexture.width, webcamTexture.height, BitDepth.U8, 3);
+        IplImage img = new IplImage(m_nWidth, m_nHeight, BitDepth.U8, 3);
         Color[] pixels = webcamTexture.GetPixels();
 
-        for (int i = 0; i < webcamTexture.height; i++)
+        for (int i = 0; i < m_nHeight; i++)
         {
-            for (int j = webcamTexture.width - 1; j >= 0; j--)
+            for (int j = 0; j < m_nWidth; j++)
             {
-                Color pixel = pixels[i * webcamTexture.width + j];
+                Color pixel = pixels[i * m_nWidth + j];
                 CvScalar col = new CvScalar
                 {
                     Val0 = (double)pixel.r * 255,
@@ -124,50 +171,57 @@ public class WebCamCV : MonoBehaviour
         return imgThreshed;
     }
 
+    void OnDestroy()
+    {
+        Cv.ReleaseCapture(cap);
+    }
+
+
     void Update()
     {
-        IplImage img = WebcamTextureToIplImage();   // ;;
-        img = GetThresholdedImage(img);             // ok
-        ThresholdedIplImageToViewTexture(img);      // ;;
+        Cv.GrabFrame(cap);
+        IplImage img = Cv.RetrieveFrame(cap);
 
-        m_blobLabeling.setParam(viewTexture.GetPixels(), webcamTexture.width, webcamTexture.height, 50);
-        m_blobLabeling.DoLabeling();
-
-        Debug.Log(m_blobLabeling.m_nBlobs);
-
-        Vector3 viewPos = this.transform.position;
-        Bounds viewBounds = this.GetComponent<Renderer>().bounds;
-
-        for (int i = 0; i < m_blobLabeling.m_nBlobs; i++)
+        if (viewCam)
         {
-            Point pt1 = new Point((int)m_blobLabeling.m_recBlobs[i].x, (int)m_blobLabeling.m_recBlobs[i].y);
-            Point pt2 = new Point(pt1.x + (int)m_blobLabeling.m_recBlobs[i].width, pt1.y + (int)m_blobLabeling.m_recBlobs[i].height);
-
-            Debug.DrawLine(
-                new Vector3(
-                    pt1.x * viewBounds.size.x / webcamTexture.width + viewPos.x - viewBounds.size.x / 2,
-                    pt1.y * viewBounds.size.y / webcamTexture.height + viewPos.y - viewBounds.size.y / 2,
-                    -20),
-                new Vector3(
-                    pt2.x * viewBounds.size.x / webcamTexture.width + viewPos.x - viewBounds.size.x / 2,
-                    pt2.y * viewBounds.size.y / webcamTexture.height + viewPos.y - viewBounds.size.y / 2,
-                    -20),
-                Color.green);
+            IplImageToViewTexture(img);
         }
 
-        if(m_blobLabeling.m_nBlobs > 0)
+
+
+        img = GetThresholdedImage(img);
+
+        System.Diagnostics.Stopwatch w = System.Diagnostics.Stopwatch.StartNew();
+        Color[] pixels = ThresholdedIplImageToColorMat(img);
+        w.Stop();
+        if (viewThresholded)
+        {
+            viewTexture.SetPixels(pixels);
+            viewTexture.Apply();
+        }
+
+
+
+        // Labeling
+        blobLabeling.setParam(pixels, m_nWidth, m_nHeight, 50);
+        blobLabeling.DoLabeling();
+
+        Vector3 viewPos = this.transform.position;
+
+        if (blobLabeling.m_nBlobs > 0)
         {
             Vector3 ballPos = ball.transform.position;
             Vector3 boardPos = board.transform.position;
             Bounds boardBounds = board.GetComponent<Renderer>().bounds;
             Vector3 _smoothVel = Vector3.zero;
 
-            ballPos.x = m_blobLabeling.m_recBlobs[0].center.x * (boardBounds.size.x * 1.5f) / webcamTexture.width + boardPos.x - (boardBounds.size.x * 1.5f) / 2f;
-            ballPos.y = m_blobLabeling.m_recBlobs[0].center.y * (boardBounds.size.y * 1.5f) / webcamTexture.height + boardPos.y - (boardBounds.size.y * 1.5f) / 2f;
+            ballPos.x = blobLabeling.m_recBlobs[0].center.x * (boardBounds.size.x * 1.5f) / m_nWidth + boardPos.x - (boardBounds.size.x * 1.5f) / 2f;
+            ballPos.y = blobLabeling.m_recBlobs[0].center.y * (boardBounds.size.y * 1.5f) / m_nHeight + boardPos.y - (boardBounds.size.y * 1.5f) / 2f;
 
-            ball.transform.position = ballPos;
             ball.transform.position = Vector3.SmoothDamp(ball.transform.position, new Vector3(ballPos.x, ballPos.y), ref _smoothVel, 0.3f);
         }
 
+
+        Debug.Log(w.ElapsedMilliseconds + " ms");
     }
 }
