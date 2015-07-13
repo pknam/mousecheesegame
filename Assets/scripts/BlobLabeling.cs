@@ -4,22 +4,10 @@ using OpenCvSharp;
 using System.Runtime.InteropServices;
 using System;
 
-class Point
-{
-    public int x;
-    public int y;
-
-    public Point(int x, int y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-}
-
 class Visited
 {
     public bool visitedFlag;
-    public Point point;
+    public CvPoint returnPoint;
 }
 
 class BlobLabeling : System.Object
@@ -106,7 +94,7 @@ class BlobLabeling : System.Object
                 m_vPoint[nY * nWidth + nX] = new Visited()
                 {
                     visitedFlag = false,
-                    point = new Point(nX, nY)
+                    returnPoint = new CvPoint(nX, nY)
                 };
             }
         }
@@ -156,10 +144,8 @@ class BlobLabeling : System.Object
                         m_recBlobs[nLabelIndex - 1].y = top;
                         m_recBlobs[nLabelIndex - 1].width = right - left;
                         m_recBlobs[nLabelIndex - 1].height = bottom - top;
-
                     }
                 }
-
             }
         }
     }
@@ -212,99 +198,99 @@ class BlobLabeling : System.Object
 
     private int __NRFindNeighbor(int nWidth, int nHeight, int nPosX, int nPosY, ref int startX, ref int startY, ref int endX, ref int endY)
     {
-        Point CurrentPoint = new Point(nPosX, nPosY);
+        CvPoint CurrentPoint = new CvPoint(nPosX, nPosY);
 
-        m_vPoint[CurrentPoint.y * nWidth + CurrentPoint.x].visitedFlag = true;
-        m_vPoint[CurrentPoint.y * nWidth + CurrentPoint.x].point.x = nPosX;
-        m_vPoint[CurrentPoint.y * nWidth + CurrentPoint.x].point.y = nPosY;
+        m_vPoint[CurrentPoint.Y * nWidth + CurrentPoint.X].visitedFlag = true;
+        m_vPoint[CurrentPoint.Y * nWidth + CurrentPoint.X].returnPoint.X = nPosX;
+        m_vPoint[CurrentPoint.Y * nWidth + CurrentPoint.X].returnPoint.Y = nPosY;
 
 
         while (true)
         {
-            if ((CurrentPoint.x != 0) && (m_cdataBuf[CurrentPoint.y * nWidth + CurrentPoint.x - 1] == 255))   // -X 방향
+            if ((CurrentPoint.X != 0) && (m_cdataBuf[CurrentPoint.Y * nWidth + CurrentPoint.X - 1] == 255))   // -X 방향
             {
-                if (m_vPoint[CurrentPoint.y * nWidth + CurrentPoint.x - 1].visitedFlag == false)
+                if (m_vPoint[CurrentPoint.Y * nWidth + CurrentPoint.X - 1].visitedFlag == false)
                 {
-                    m_cdataBuf[CurrentPoint.y * nWidth + CurrentPoint.x - 1] = m_cdataBuf[CurrentPoint.y * nWidth + CurrentPoint.x];	// If so, mark it
-                    m_vPoint[CurrentPoint.y * nWidth + CurrentPoint.x - 1].visitedFlag = true;
-                    m_vPoint[CurrentPoint.y * nWidth + CurrentPoint.x - 1].point = CurrentPoint;
-                    CurrentPoint.x--;
+                    m_cdataBuf[CurrentPoint.Y * nWidth + CurrentPoint.X - 1] = m_cdataBuf[CurrentPoint.Y * nWidth + CurrentPoint.X];	// If so, mark it
+                    m_vPoint[CurrentPoint.Y * nWidth + CurrentPoint.X - 1].visitedFlag = true;
+                    m_vPoint[CurrentPoint.Y * nWidth + CurrentPoint.X - 1].returnPoint = CurrentPoint;
+                    CurrentPoint.X--;
 
-                    if (CurrentPoint.x <= 0)
-                        CurrentPoint.x = 0;
+                    if (CurrentPoint.X <= 0)
+                        CurrentPoint.X = 0;
 
-                    if (startX >= CurrentPoint.x)
-                        startX = CurrentPoint.x;
+                    if (startX >= CurrentPoint.X)
+                        startX = CurrentPoint.X;
 
                     continue;
                 }
             }
 
-            if ((CurrentPoint.x != nWidth - 1) && (m_cdataBuf[CurrentPoint.y * nWidth + CurrentPoint.x + 1] == 255))   // +X 방향
+            if ((CurrentPoint.X != nWidth - 1) && (m_cdataBuf[CurrentPoint.Y * nWidth + CurrentPoint.X + 1] == 255))   // +X 방향
             {
-                if (m_vPoint[CurrentPoint.y * nWidth + CurrentPoint.x + 1].visitedFlag == false)
+                if (m_vPoint[CurrentPoint.Y * nWidth + CurrentPoint.X + 1].visitedFlag == false)
                 {
-                    m_cdataBuf[CurrentPoint.y * nWidth + CurrentPoint.x + 1] = m_cdataBuf[CurrentPoint.y * nWidth + CurrentPoint.x];	// If so, mark it
-                    m_vPoint[CurrentPoint.y * nWidth + CurrentPoint.x + 1].visitedFlag = true;
-                    m_vPoint[CurrentPoint.y * nWidth + CurrentPoint.x + 1].point = CurrentPoint;
-                    CurrentPoint.x++;
+                    m_cdataBuf[CurrentPoint.Y * nWidth + CurrentPoint.X + 1] = m_cdataBuf[CurrentPoint.Y * nWidth + CurrentPoint.X];	// If so, mark it
+                    m_vPoint[CurrentPoint.Y * nWidth + CurrentPoint.X + 1].visitedFlag = true;
+                    m_vPoint[CurrentPoint.Y * nWidth + CurrentPoint.X + 1].returnPoint = CurrentPoint;
+                    CurrentPoint.X++;
 
-                    if (CurrentPoint.x >= nWidth - 1)
-                        CurrentPoint.x = nWidth - 1;
+                    if (CurrentPoint.X >= nWidth - 1)
+                        CurrentPoint.X = nWidth - 1;
 
-                    if (endX <= CurrentPoint.x)
-                        endX = CurrentPoint.x;
+                    if (endX <= CurrentPoint.X)
+                        endX = CurrentPoint.X;
 
                     continue;
                 }
             }
 
-            if ((CurrentPoint.y != 0) && (m_cdataBuf[(CurrentPoint.y - 1) * nWidth + CurrentPoint.x] == 255))   // -Y 방향
+            if ((CurrentPoint.Y != 0) && (m_cdataBuf[(CurrentPoint.Y - 1) * nWidth + CurrentPoint.X] == 255))   // -Y 방향
             {
-                if (m_vPoint[(CurrentPoint.y - 1) * nWidth + CurrentPoint.x].visitedFlag == false)
+                if (m_vPoint[(CurrentPoint.Y - 1) * nWidth + CurrentPoint.X].visitedFlag == false)
                 {
-                    m_cdataBuf[(CurrentPoint.y - 1) * nWidth + CurrentPoint.x] = m_cdataBuf[CurrentPoint.y * nWidth + CurrentPoint.x];	// If so, mark it
-                    m_vPoint[(CurrentPoint.y - 1) * nWidth + CurrentPoint.x].visitedFlag = true;
-                    m_vPoint[(CurrentPoint.y - 1) * nWidth + CurrentPoint.x].point = CurrentPoint;
-                    CurrentPoint.y--;
+                    m_cdataBuf[(CurrentPoint.Y - 1) * nWidth + CurrentPoint.X] = m_cdataBuf[CurrentPoint.Y * nWidth + CurrentPoint.X];	// If so, mark it
+                    m_vPoint[(CurrentPoint.Y - 1) * nWidth + CurrentPoint.X].visitedFlag = true;
+                    m_vPoint[(CurrentPoint.Y - 1) * nWidth + CurrentPoint.X].returnPoint = CurrentPoint;
+                    CurrentPoint.Y--;
 
-                    if (CurrentPoint.y <= 0)
-                        CurrentPoint.y = 0;
+                    if (CurrentPoint.Y <= 0)
+                        CurrentPoint.Y = 0;
 
-                    if (startY >= CurrentPoint.y)
-                        startY = CurrentPoint.y;
+                    if (startY >= CurrentPoint.Y)
+                        startY = CurrentPoint.Y;
 
                     continue;
                 }
             }
 
-            if ((CurrentPoint.y != nHeight - 1) && (m_cdataBuf[(CurrentPoint.y + 1) * nWidth + CurrentPoint.x] == 255))   // +Y 방향
+            if ((CurrentPoint.Y != nHeight - 1) && (m_cdataBuf[(CurrentPoint.Y + 1) * nWidth + CurrentPoint.X] == 255))   // +Y 방향
             {
-                if (m_vPoint[(CurrentPoint.y + 1) * nWidth + CurrentPoint.x].visitedFlag == false)
+                if (m_vPoint[(CurrentPoint.Y + 1) * nWidth + CurrentPoint.X].visitedFlag == false)
                 {
-                    m_cdataBuf[(CurrentPoint.y + 1) * nWidth + CurrentPoint.x] = m_cdataBuf[CurrentPoint.y * nWidth + CurrentPoint.x];	// If so, mark it
-                    m_vPoint[(CurrentPoint.y + 1) * nWidth + CurrentPoint.x].visitedFlag = true;
-                    m_vPoint[(CurrentPoint.y + 1) * nWidth + CurrentPoint.x].point = CurrentPoint;
-                    CurrentPoint.y++;
+                    m_cdataBuf[(CurrentPoint.Y + 1) * nWidth + CurrentPoint.X] = m_cdataBuf[CurrentPoint.Y * nWidth + CurrentPoint.X];	// If so, mark it
+                    m_vPoint[(CurrentPoint.Y + 1) * nWidth + CurrentPoint.X].visitedFlag = true;
+                    m_vPoint[(CurrentPoint.Y + 1) * nWidth + CurrentPoint.X].returnPoint = CurrentPoint;
+                    CurrentPoint.Y++;
 
-                    if (CurrentPoint.y >= nHeight - 1)
-                        CurrentPoint.y = nHeight - 1;
+                    if (CurrentPoint.Y >= nHeight - 1)
+                        CurrentPoint.Y = nHeight - 1;
 
-                    if (endY <= CurrentPoint.y)
-                        endY = CurrentPoint.y;
+                    if (endY <= CurrentPoint.Y)
+                        endY = CurrentPoint.Y;
 
                     continue;
                 }
             }
 
-            if ((CurrentPoint.x == m_vPoint[CurrentPoint.y * nWidth + CurrentPoint.x].point.x)
-                && (CurrentPoint.y == m_vPoint[CurrentPoint.y * nWidth + CurrentPoint.x].point.y))
+            if ((CurrentPoint.X == m_vPoint[CurrentPoint.Y * nWidth + CurrentPoint.X].returnPoint.X)
+                && (CurrentPoint.Y == m_vPoint[CurrentPoint.Y * nWidth + CurrentPoint.X].returnPoint.Y))
             {
                 break;
             }
             else
             {
-                CurrentPoint = m_vPoint[CurrentPoint.y * nWidth + CurrentPoint.x].point;
+                CurrentPoint = m_vPoint[CurrentPoint.Y * nWidth + CurrentPoint.X].returnPoint;
             }
         }
 

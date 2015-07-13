@@ -237,11 +237,13 @@ MonoBehaviour:
   viewThresholded: 0
   erode: 1
   dilate: 1
-  n_erode: 0
-  n_dilate: 0
+  n_erode: 2
+  n_dilate: 5
   balls:
   - {fileID: 943295515}
   - {fileID: 1722026794}
+  - {fileID: 1301848374}
+  - {fileID: 1576542218}
   board: {fileID: 1755951853}
   h_upper: 0
   h_lower: 0
@@ -695,6 +697,14 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d92f57091e6d453469596373ab7b2321, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1301848374 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 172770, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
+  m_PrefabInternal: {fileID: 2116894274}
+--- !u!1 &1576542218 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 172770, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
+  m_PrefabInternal: {fileID: 1085599128}
 --- !u!1001 &1670290713
 Prefab:
   m_ObjectHideFlags: 0

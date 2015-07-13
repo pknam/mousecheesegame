@@ -48,7 +48,6 @@ public class WebCamCV : MonoBehaviour
     {
         blobLabeling = new BlobLabeling();
 
-
         cap = new CvCapture(0);
         m_nWidth = cap.FrameWidth;
         m_nHeight = cap.FrameHeight;
@@ -56,12 +55,12 @@ public class WebCamCV : MonoBehaviour
         viewCam = false;
         viewThresholded = false;
 
-        h_upper = 180;
-        h_lower = 168;
-        s_upper = 243;
-        s_lower = 137;
-        v_upper = 159;
-        v_lower = 97;
+        h_upper = 170;
+        h_lower = 160;
+        s_upper = 75;
+        s_lower = 42;
+        v_upper = 186;
+        v_lower = 166;
 
         viewTexture = new Texture2D(m_nWidth, m_nHeight, TextureFormat.RGB24, false);
         GameObject.Find("viewcv").GetComponent<Renderer>().material.mainTexture = viewTexture;
