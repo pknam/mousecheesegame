@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class drawBezierCurve : MonoBehaviour 
 {
     [HideInInspector]
-    public LineRenderer line = new LineRenderer();
+    public LineRenderer line;
     
     private int lineRes;
 

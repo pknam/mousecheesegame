@@ -2,7 +2,6 @@
 using System.Collections;
 using OpenCvSharp;
 using System.Runtime.InteropServices;
-using System.Threading;
 
 public class WebCamCV : MonoBehaviour
 {
@@ -22,9 +21,6 @@ public class WebCamCV : MonoBehaviour
 
     private int m_nWidth;
     private int m_nHeight;
-
-    public int thread_max;
-    private Thread[] thread;
 
     CvCapture cap;
 
@@ -55,20 +51,17 @@ public class WebCamCV : MonoBehaviour
         viewThresholded = false;
 
         h_upper = 180;
-        h_lower = 169;
-        s_upper = 11;
-        s_lower = 0;
-        v_upper = 256;
-        v_lower = 244;
+        h_lower = 168;
+        s_upper = 243;
+        s_lower = 137;
+        v_upper = 159;
+        v_lower = 97;
 
         viewTexture = new Texture2D(m_nWidth, m_nHeight, TextureFormat.RGB24, false);
         GameObject.Find("viewcv").GetComponent<Renderer>().material.mainTexture = viewTexture;
 
         cvCamTexture = new Texture2D(m_nWidth, m_nHeight, TextureFormat.RGB24, false);
         this.GetComponent<Renderer>().material.mainTexture = cvCamTexture;
-
-        thread_max = 30;
-        thread = new Thread[thread_max];
     }
 
     private void IplImageToViewTexture(IplImage img)
@@ -154,8 +147,6 @@ public class WebCamCV : MonoBehaviour
         // Labeling
         blobLabeling.setParam(thresholdedImg, 50);
         blobLabeling.DoLabeling();
-
-        Vector3 viewPos = this.transform.position;
 
         if (blobLabeling.m_nBlobs > 0)
         {
