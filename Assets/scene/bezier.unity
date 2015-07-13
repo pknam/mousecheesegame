@@ -122,8 +122,8 @@ Camera:
   near clip plane: .00999999978
   far clip plane: 50
   field of view: 42.0999985
-  orthographic: 0
-  orthographic size: 11.2195587
+  orthographic: 1
+  orthographic size: 12.4759407
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -235,11 +235,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewCam: 0
   viewThresholded: 0
-  erode: 0
-  dilate: 0
-  ball: {fileID: 943295515}
+  erode: 1
+  dilate: 1
+  n_erode: 0
+  n_dilate: 0
+  balls:
+  - {fileID: 943295515}
+  - {fileID: 1722026794}
   board: {fileID: 1755951853}
-  thread_max: 0
   h_upper: 0
   h_lower: 0
   s_upper: 0
@@ -742,6 +745,10 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1722026794 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 172770, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
+  m_PrefabInternal: {fileID: 1670290713}
 --- !u!1 &1755951853
 GameObject:
   m_ObjectHideFlags: 0

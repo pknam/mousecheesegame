@@ -71,7 +71,6 @@ class BlobLabeling : System.Object
     {
         int nNumber;
 
-
         // data copy
         IntPtr ptr = image.ImageData;
         for (int j = 0; j < m_nHeight; j++)
@@ -104,9 +103,11 @@ class BlobLabeling : System.Object
         {
             for (nX = 0; nX < nWidth; nX++)
             {
-                m_vPoint[nY * nWidth + nX] = new Visited();
-                m_vPoint[nY * nWidth + nX].visitedFlag = false;
-                m_vPoint[nY * nWidth + nX].point = new Point(nX, nY);
+                m_vPoint[nY * nWidth + nX] = new Visited()
+                {
+                    visitedFlag = false,
+                    point = new Point(nX, nY)
+                };
             }
         }
     }
@@ -239,7 +240,7 @@ class BlobLabeling : System.Object
                 }
             }
 
-            if ((CurrentPoint.x != nWidth - 1) && (m_cdataBuf[CurrentPoint.y * nWidth + CurrentPoint.x + 1] == 255))   // -X 방향
+            if ((CurrentPoint.x != nWidth - 1) && (m_cdataBuf[CurrentPoint.y * nWidth + CurrentPoint.x + 1] == 255))   // +X 방향
             {
                 if (m_vPoint[CurrentPoint.y * nWidth + CurrentPoint.x + 1].visitedFlag == false)
                 {
@@ -258,7 +259,7 @@ class BlobLabeling : System.Object
                 }
             }
 
-            if ((CurrentPoint.y != 0) && (m_cdataBuf[(CurrentPoint.y - 1) * nWidth + CurrentPoint.x] == 255))   // -X 방향
+            if ((CurrentPoint.y != 0) && (m_cdataBuf[(CurrentPoint.y - 1) * nWidth + CurrentPoint.x] == 255))   // -Y 방향
             {
                 if (m_vPoint[(CurrentPoint.y - 1) * nWidth + CurrentPoint.x].visitedFlag == false)
                 {
@@ -277,7 +278,7 @@ class BlobLabeling : System.Object
                 }
             }
 
-            if ((CurrentPoint.y != nHeight - 1) && (m_cdataBuf[(CurrentPoint.y + 1) * nWidth + CurrentPoint.x] == 255))   // -X 방향
+            if ((CurrentPoint.y != nHeight - 1) && (m_cdataBuf[(CurrentPoint.y + 1) * nWidth + CurrentPoint.x] == 255))   // +Y 방향
             {
                 if (m_vPoint[(CurrentPoint.y + 1) * nWidth + CurrentPoint.x].visitedFlag == false)
                 {

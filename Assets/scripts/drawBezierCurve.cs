@@ -41,9 +41,9 @@ public class drawBezierCurve : MonoBehaviour
         return templist;
     }
 
-    void Update()
+    public void drawCurve()
     {
-        Vector3[] allPoints = new Vector3[]{};
+        Vector3[] allPoints = new Vector3[] { };
         allPoints = getControlPoints().ToArray();
         SplineBuilder crs = new SplineBuilder(allPoints);
 
@@ -56,7 +56,7 @@ public class drawBezierCurve : MonoBehaviour
             line.SetPosition(p, temp);
 
             temp.z = -0.01f;
-            foreach(var wall in walls)
+            foreach (var wall in walls)
             {
                 if (wall.GetComponent<BoxCollider2D>().bounds.Contains(temp))
                     available = false;
@@ -67,6 +67,11 @@ public class drawBezierCurve : MonoBehaviour
             else
                 line.SetColors(Color.red, Color.red);
         }
+    }
+
+    void Update()
+    {
+        //drawCurve();
     }
 }
 
