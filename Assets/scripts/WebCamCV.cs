@@ -4,6 +4,7 @@ using OpenCvSharp;
 using System.Runtime.InteropServices;
 using OpenCvSharp.Blob;
 using System;
+using System.Linq;
 
 public class WebCamCV : MonoBehaviour
 {
@@ -157,12 +158,12 @@ public class WebCamCV : MonoBehaviour
 
         Debug.Log("blob size : "  + blobs.Values.Count);
 
-        int i = 0;
-        foreach(var blob in blobs)
+        for (int i = 0; i < blobs.Values.Count && i < balls.Length; i++)
         {
-            int blobX = Convert.ToInt32(blob.Value.Centroid.X);
-            int blobY = Convert.ToInt32(blob.Value.Centroid.Y);
-            var ball = balls[i++];
+            var blob = blobs.Values.ElementAt<CvBlob>(i);
+            var ball = balls[i];
+            int blobX = Convert.ToInt32(blob.Centroid.X);
+            int blobY = Convert.ToInt32(blob.Centroid.Y);
 
             Vector3 ballPos = ball.transform.position;
             Vector3 boardPos = board.transform.position;
