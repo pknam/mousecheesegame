@@ -2,6 +2,8 @@
 using System.Collections;
 using OpenCvSharp;
 using System.Runtime.InteropServices;
+using OpenCvSharp.Blob;
+using System;
 
 public class WebCamCV : MonoBehaviour
 {
@@ -48,7 +50,7 @@ public class WebCamCV : MonoBehaviour
     {
         blobLabeling = new BlobLabeling();
 
-        cap = new CvCapture(0);
+        cap = Cv.CreateCameraCapture(0);
         m_nWidth = cap.FrameWidth;
         m_nHeight = cap.FrameHeight;
 
@@ -130,7 +132,6 @@ public class WebCamCV : MonoBehaviour
         Cv.ReleaseCapture(cap);
     }
 
-
     void Update()
     {
         Cv.GrabFrame(cap);
@@ -149,31 +150,66 @@ public class WebCamCV : MonoBehaviour
             viewTexture.Apply();
         }
 
-        // Labeling
-        blobLabeling.setParam(thresholdedImg, 300);
-        blobLabeling.DoLabeling();
 
-        Debug.Log("blob size : " + blobLabeling.m_nBlobs);
+        
+        CvBlobs blobs = new CvBlobs();
+        blobs.Label(thresholdedImg);
 
-        for (int i = 0; i < blobLabeling.m_nBlobs && i<balls.Length; i++)
+        Debug.Log("blob size : "  + blobs.Values.Count);
+
+        int i = 0;
+        foreach(var blob in blobs)
         {
-            var ball = balls[i];
+            int blobX = Convert.ToInt32(blob.Value.Centroid.X);
+            int blobY = Convert.ToInt32(blob.Value.Centroid.Y);
+            var ball = balls[i++];
+
             Vector3 ballPos = ball.transform.position;
             Vector3 boardPos = board.transform.position;
             Bounds boardBounds = board.GetComponent<Renderer>().bounds;
             Vector3 _smoothVel = Vector3.zero;
 
-            ballPos.x = blobLabeling.m_recBlobs[i].center.x * (boardBounds.size.x * 1.5f) / m_nWidth + boardPos.x - (boardBounds.size.x * 1.5f) / 2f;
-            ballPos.y = blobLabeling.m_recBlobs[i].center.y * (boardBounds.size.y * 1.5f) / m_nHeight + boardPos.y - (boardBounds.size.y * 1.5f) / 2f;
+            ballPos.x = blobX * (boardBounds.size.x * 1.5f) / m_nWidth + boardPos.x - (boardBounds.size.x * 1.5f) / 2f;
+            ballPos.y = blobY * (boardBounds.size.y * 1.5f) / m_nHeight + boardPos.y - (boardBounds.size.y * 1.5f) / 2f;
 
-            ball.transform.position = ballPos;
-            //ball.transform.position = Vector3.SmoothDamp(ball.transform.position, new Vector3(ballPos.x, ballPos.y), ref _smoothVel, 0.1f);
+            //ball.transform.position = ballPos;
+            ball.transform.position = Vector3.SmoothDamp(ball.transform.position, new Vector3(ballPos.x, ballPos.y), ref _smoothVel, 0.1f);
         }
 
-        for (int i = blobLabeling.m_nBlobs; i < balls.Length; i++)
+        for (int j = blobs.Values.Count; j < balls.Length; j++)
         {
-            balls[i].transform.position = new Vector3(3.7f, -10f, -0.01f);
+            balls[j].transform.position = new Vector3(3.7f, -10f, -0.01f);
         }
+
+
+
+
+//        // Labeling
+//        blobLabeling.setParam(thresholdedImg, 300);
+//        blobLabeling.DoLabeling();
+
+
+////        Debug.Log("blob size : " + blobLabeling.m_nBlobs);
+
+//        for (int i = 0; i < blobLabeling.m_nBlobs && i<balls.Length; i++)
+//        {
+//            var ball = balls[i];
+//            Vector3 ballPos = ball.transform.position;
+//            Vector3 boardPos = board.transform.position;
+//            Bounds boardBounds = board.GetComponent<Renderer>().bounds;
+//            Vector3 _smoothVel = Vector3.zero;
+
+//            ballPos.x = blobLabeling.m_recBlobs[i].center.x * (boardBounds.size.x * 1.5f) / m_nWidth + boardPos.x - (boardBounds.size.x * 1.5f) / 2f;
+//            ballPos.y = blobLabeling.m_recBlobs[i].center.y * (boardBounds.size.y * 1.5f) / m_nHeight + boardPos.y - (boardBounds.size.y * 1.5f) / 2f;
+
+//            //ball.transform.position = ballPos;
+//            ball.transform.position = Vector3.SmoothDamp(ball.transform.position, new Vector3(ballPos.x, ballPos.y), ref _smoothVel, 0.1f);
+//        }
+
+//        for (int i = blobLabeling.m_nBlobs; i < balls.Length; i++)
+//        {
+//            balls[i].transform.position = new Vector3(3.7f, -10f, -0.01f);
+//        }
 
         GameObject.Find("bezier_control").GetComponent<drawBezierCurve>().drawCurve();
     }

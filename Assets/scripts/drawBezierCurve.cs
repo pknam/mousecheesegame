@@ -2,17 +2,18 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(LineRenderer))]
 public class drawBezierCurve : MonoBehaviour 
 {
     [HideInInspector]
     public LineRenderer line;
-    
     private int lineRes;
 
     void Start()
     {
         lineRes = 200;
-        line = gameObject.AddComponent<LineRenderer>();
+
+        line = this.GetComponent<LineRenderer>();
         line.material = new Material(Shader.Find("Particles/Additive"));
         line.SetWidth(0.3F, 0.3F);
         line.SetColors(Color.green, Color.green);
