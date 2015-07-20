@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using OpenCvSharp;
-using System.Runtime.InteropServices;
 using OpenCvSharp.Blob;
+using OpenCvSharp.CPlusPlus;
+using System.Runtime.InteropServices;
 using System;
 using System.Linq;
 
@@ -26,7 +27,7 @@ public class WebCamCV : MonoBehaviour
     private Texture2D viewTexture;
     private Texture2D cvCamTexture;
 
-    BlobLabeling blobLabeling;
+    //BlobLabeling blobLabeling;
 
     private int m_nWidth;
     private int m_nHeight;
@@ -49,7 +50,7 @@ public class WebCamCV : MonoBehaviour
 
     void Start()
     {
-        blobLabeling = new BlobLabeling();
+        //blobLabeling = new BlobLabeling();
 
         cap = Cv.CreateCameraCapture(0);
         m_nWidth = cap.FrameWidth;
@@ -57,13 +58,13 @@ public class WebCamCV : MonoBehaviour
 
         viewCam = false;
         viewThresholded = false;
-
-        h_upper = 170;
-        h_lower = 160;
-        s_upper = 75;
-        s_lower = 42;
-        v_upper = 186;
-        v_lower = 166;
+        
+        h_upper = 180;
+        h_lower = 116;
+        s_upper = 80;
+        s_lower = 18;
+        v_upper = 202;
+        v_lower = 108;
 
         viewTexture = new Texture2D(m_nWidth, m_nHeight, TextureFormat.RGB24, false);
         GameObject.Find("viewcv").GetComponent<Renderer>().material.mainTexture = viewTexture;
@@ -156,7 +157,7 @@ public class WebCamCV : MonoBehaviour
         CvBlobs blobs = new CvBlobs();
         blobs.Label(thresholdedImg);
 
-        Debug.Log("blob size : "  + blobs.Values.Count);
+        //Debug.Log("blob size : "  + blobs.Values.Count);
 
         for (int i = 0; i < blobs.Values.Count && i < balls.Length; i++)
         {

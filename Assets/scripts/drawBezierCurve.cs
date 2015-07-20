@@ -54,6 +54,7 @@ public class drawBezierCurve : MonoBehaviour
         for (int p = 0; p < lineRes; p++)
         {
             Vector3 temp = crs.Interp((float)p / lineRes);
+            temp.z = 0f;
             line.SetPosition(p, temp);
 
             temp.z = -0.01f;
