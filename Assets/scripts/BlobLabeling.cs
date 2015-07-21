@@ -60,10 +60,7 @@ class BlobLabeling : System.Object
         int nNumber;
 
         // data copy
-        IntPtr ptr = image.ImageData;
-        for (int j = 0; j < m_nHeight; j++)
-            for (int i = 0; i < m_nWidth; i++)
-                m_cdataBuf[j * m_nWidth + i] = Marshal.ReadByte(ptr, m_nWidth * j + i);
+        Marshal.Copy(image.ImageData, m_cdataBuf, 0, image.Width * image.Height);
 
 
         initvPoint(m_nWidth, m_nHeight);

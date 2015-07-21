@@ -153,18 +153,19 @@ public class WebCamCV : MonoBehaviour
         }
 
 
-        
-        CvBlobs blobs = new CvBlobs();
+
+        #region my blob labeling
+        MyBlobLabeling blobs = new MyBlobLabeling();
         blobs.Label(thresholdedImg);
 
-        //Debug.Log("blob size : "  + blobs.Values.Count);
+        Debug.Log("blob size : " + blobs.m_recBlobs.Count);
 
-        for (int i = 0; i < blobs.Values.Count && i < balls.Length; i++)
+        for (int i = 0; i < blobs.m_nBlobs && i < balls.Length; i++)
         {
-            var blob = blobs.Values.ElementAt<CvBlob>(i);
+            var blob = blobs.m_recBlobs[i];
             var ball = balls[i];
-            int blobX = Convert.ToInt32(blob.Centroid.X);
-            int blobY = Convert.ToInt32(blob.Centroid.Y);
+            int blobX = blob.Left + blob.Width / 2;
+            int blobY = blob.Top + blob.Height / 2;
 
             Vector3 ballPos = ball.transform.position;
             Vector3 boardPos = board.transform.position;
@@ -178,40 +179,76 @@ public class WebCamCV : MonoBehaviour
             ball.transform.position = Vector3.SmoothDamp(ball.transform.position, new Vector3(ballPos.x, ballPos.y), ref _smoothVel, 0.1f);
         }
 
-        for (int j = blobs.Values.Count; j < balls.Length; j++)
+        for (int j = blobs.m_nBlobs; j < balls.Length; j++)
         {
             balls[j].transform.position = new Vector3(3.7f, -10f, -0.01f);
         }
+        #endregion
 
 
 
+        #region opencv blob labeling
+        //CvBlobs blobs = new CvBlobs();
+        //blobs.Label(thresholdedImg);
 
-//        // Labeling
-//        blobLabeling.setParam(thresholdedImg, 300);
-//        blobLabeling.DoLabeling();
+        ////Debug.Log("blob size : "  + blobs.Values.Count);
+
+        //for (int i = 0; i < blobs.Values.Count && i < balls.Length; i++)
+        //{
+        //    var blob = blobs.Values.ElementAt<CvBlob>(i);
+        //    var ball = balls[i];
+        //    int blobX = Convert.ToInt32(blob.Centroid.X);
+        //    int blobY = Convert.ToInt32(blob.Centroid.Y);
+
+        //    Vector3 ballPos = ball.transform.position;
+        //    Vector3 boardPos = board.transform.position;
+        //    Bounds boardBounds = board.GetComponent<Renderer>().bounds;
+        //    Vector3 _smoothVel = Vector3.zero;
+
+        //    ballPos.x = blobX * (boardBounds.size.x * 1.5f) / m_nWidth + boardPos.x - (boardBounds.size.x * 1.5f) / 2f;
+        //    ballPos.y = blobY * (boardBounds.size.y * 1.5f) / m_nHeight + boardPos.y - (boardBounds.size.y * 1.5f) / 2f;
+
+        //    //ball.transform.position = ballPos;
+        //    ball.transform.position = Vector3.SmoothDamp(ball.transform.position, new Vector3(ballPos.x, ballPos.y), ref _smoothVel, 0.1f);
+        //}
+
+        //for (int j = blobs.Values.Count; j < balls.Length; j++)
+        //{
+        //    balls[j].transform.position = new Vector3(3.7f, -10f, -0.01f);
+        //}
+
+        #endregion
 
 
-////        Debug.Log("blob size : " + blobLabeling.m_nBlobs);
 
-//        for (int i = 0; i < blobLabeling.m_nBlobs && i<balls.Length; i++)
-//        {
-//            var ball = balls[i];
-//            Vector3 ballPos = ball.transform.position;
-//            Vector3 boardPos = board.transform.position;
-//            Bounds boardBounds = board.GetComponent<Renderer>().bounds;
-//            Vector3 _smoothVel = Vector3.zero;
+        #region lebeling library
+        //BlobLabeling blobLabeling = new BlobLabeling();
+        //blobLabeling.setParam(thresholdedImg, 300);
+        //blobLabeling.DoLabeling();
 
-//            ballPos.x = blobLabeling.m_recBlobs[i].center.x * (boardBounds.size.x * 1.5f) / m_nWidth + boardPos.x - (boardBounds.size.x * 1.5f) / 2f;
-//            ballPos.y = blobLabeling.m_recBlobs[i].center.y * (boardBounds.size.y * 1.5f) / m_nHeight + boardPos.y - (boardBounds.size.y * 1.5f) / 2f;
 
-//            //ball.transform.position = ballPos;
-//            ball.transform.position = Vector3.SmoothDamp(ball.transform.position, new Vector3(ballPos.x, ballPos.y), ref _smoothVel, 0.1f);
-//        }
+        ////        Debug.Log("blob size : " + blobLabeling.m_nBlobs);
 
-//        for (int i = blobLabeling.m_nBlobs; i < balls.Length; i++)
-//        {
-//            balls[i].transform.position = new Vector3(3.7f, -10f, -0.01f);
-//        }
+        //for (int i = 0; i < blobLabeling.m_nBlobs && i < balls.Length; i++)
+        //{
+        //    var ball = balls[i];
+        //    Vector3 ballPos = ball.transform.position;
+        //    Vector3 boardPos = board.transform.position;
+        //    Bounds boardBounds = board.GetComponent<Renderer>().bounds;
+        //    Vector3 _smoothVel = Vector3.zero;
+
+        //    ballPos.x = blobLabeling.m_recBlobs[i].center.x * (boardBounds.size.x * 1.5f) / m_nWidth + boardPos.x - (boardBounds.size.x * 1.5f) / 2f;
+        //    ballPos.y = blobLabeling.m_recBlobs[i].center.y * (boardBounds.size.y * 1.5f) / m_nHeight + boardPos.y - (boardBounds.size.y * 1.5f) / 2f;
+
+        //    //ball.transform.position = ballPos;
+        //    ball.transform.position = Vector3.SmoothDamp(ball.transform.position, new Vector3(ballPos.x, ballPos.y), ref _smoothVel, 0.1f);
+        //}
+
+        //for (int i = blobLabeling.m_nBlobs; i < balls.Length; i++)
+        //{
+        //    balls[i].transform.position = new Vector3(3.7f, -10f, -0.01f);
+        //}
+        #endregion
 
         GameObject.Find("bezier_control").GetComponent<drawBezierCurve>().drawCurve();
     }
