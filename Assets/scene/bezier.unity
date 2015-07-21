@@ -160,22 +160,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76d9ff9e303874f418f0c5e44d40054c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m00: 1
-  m01: 1
-  m02: 0
-  m03: 0
-  m10: 1
-  m11: 1
-  m12: 0
-  m13: 0
-  m20: 0
-  m21: 0
-  m22: 0
-  m23: 0
-  m30: 0
-  m31: 0
-  m32: 0
-  m33: 0
+  rotate_angle: 0
+  scale: 1
+  MatProjection:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
 --- !u!1 &229084946
 GameObject:
   m_ObjectHideFlags: 0

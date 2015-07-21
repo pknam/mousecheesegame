@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using OpenCvSharp;
 using System.Runtime.InteropServices;
@@ -7,7 +6,6 @@ using System;
 
 public class MyBlobLabeling : System.Object
 {
-    public IplImage m_image;
     public int m_nBlobs;
     public List<CvRect> m_recBlobs;
 
@@ -22,7 +20,6 @@ public class MyBlobLabeling : System.Object
     public MyBlobLabeling()
     {
         m_nBlobs = MAX_BLOBS;
-        m_image = null;
         m_recBlobs = null;
     }
 
@@ -30,7 +27,6 @@ public class MyBlobLabeling : System.Object
     {
         m_recBlobs = new List<CvRect>();
         m_nBlobs = 0;
-        m_image = image.Clone();
         m_nWidth = image.Width;
         m_nHeight = image.Height;
         m_cdataBuf = new byte[m_nWidth * m_nHeight];
@@ -72,7 +68,7 @@ public class MyBlobLabeling : System.Object
         return m_recBlobs.Count;
     }
 
-    // BFS를 이용한 blob labeling
+    // Blob Labeling using BFS
     private CvRect FindNeighbor(int nX, int nY, byte nLabel)
     {
         Queue<CvPoint> q = new Queue<CvPoint>();
