@@ -160,7 +160,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76d9ff9e303874f418f0c5e44d40054c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotate_angle: 0
+  x_rotation: 0
+  y_rotation: 0
+  z_rotation: 0
   scale: 1
   shearing: {x: 0, y: 0}
   translation: {x: 0, y: 0}
@@ -321,7 +323,7 @@ Transform:
   m_LocalScale: {x: 13, y: 9, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 0
 --- !u!1 &403767417
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,7 +441,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 449390, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 172770, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_Layer
@@ -618,7 +620,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 449390, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 172770, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_Name
@@ -703,7 +705,7 @@ Transform:
   m_LocalScale: {x: 13, y: 9, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!1001 &1268222542
 Prefab:
   m_ObjectHideFlags: 0
@@ -795,7 +797,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 449390, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 172770, guid: f3d5e91583c7bf14e91c21b957e394aa, type: 2}
       propertyPath: m_Name

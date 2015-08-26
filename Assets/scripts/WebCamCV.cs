@@ -28,8 +28,6 @@ public class WebCamCV : MonoBehaviour
     private Texture2D viewTexture;
     private Texture2D cvCamTexture;
 
-    //BlobLabeling blobLabeling;
-
     private int m_nWidth;
     private int m_nHeight;
 
@@ -51,8 +49,6 @@ public class WebCamCV : MonoBehaviour
 
     void Start()
     {
-        //blobLabeling = new BlobLabeling();
-
         cap = Cv.CreateCameraCapture(0);
         m_nWidth = cap.FrameWidth;
         m_nHeight = cap.FrameHeight;
